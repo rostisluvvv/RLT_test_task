@@ -17,13 +17,14 @@ def validate_request_data(data):
         raise TypeError(f'Invalid data type: {type(data)} '
                         f'expected dict')
     if not all(key in data for key in ['dt_from', 'dt_upto', 'group_type']):
-        raise ValueError(f'Missing required keys')
+        raise ValueError('Missing required keys')
     group_type = data['group_type']
     if group_type not in GROUP_TYPES_FORMAT:
         raise ValueError(f'Invalid value of "group_type" key: {group_type}')
 
 
 def execute_query(dt_from, dt_upto, dt_format):
+
     client = MongoClient('mongodb://127.0.0.1:27017/')
     db = client['sampleDB']
     collection = db['sample_collection']
@@ -45,6 +46,7 @@ def execute_query(dt_from, dt_upto, dt_format):
 
 
 def get_aggregated_values(data):
+
     validate_request_data(data)
     dt_from = datetime.strptime(data['dt_from'], '%Y-%m-%dT%H:%M:%S')
     dt_upto = datetime.strptime(data['dt_upto'], '%Y-%m-%dT%H:%M:%S')
@@ -65,6 +67,7 @@ def get_aggregated_values(data):
 
 
 def daterange(dt_from, dt_upto, group_type):
+
     if group_type == 'hour':
         delta = timedelta(hours=1)
     elif group_type == 'day':
